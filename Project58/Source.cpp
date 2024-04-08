@@ -4,10 +4,11 @@
 #include <cstdlib>
 #include <sstream>
 #include "glut.h"
+
 const int SIZE = 4;
 const int TILE_SIZE = 100;
 int board[SIZE][SIZE] = { 0 };
-
+int score = 0; // Переменная для хранения очков
 
 void init() {
     glClearColor(0.9, 0.9, 0.9, 1.0);
@@ -176,6 +177,7 @@ void mergeLeft() {
             if (board[i][j] == board[i][j + 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i][j + 1] = 0;
+                score += board[i][j]; // Увеличиваем очки на значение слияния
             }
         }
     }
@@ -205,6 +207,7 @@ void mergeRight() {
             if (board[i][j] == board[i][j - 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i][j - 1] = 0;
+                score += board[i][j]; // Увеличиваем очки на значение слияния
             }
         }
     }
@@ -234,6 +237,7 @@ void mergeUp() {
             if (board[i][j] == board[i + 1][j] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i + 1][j] = 0;
+                score += board[i][j]; // Увеличиваем очки на значение слияния
             }
         }
     }
@@ -263,6 +267,7 @@ void mergeDown() {
             if (board[i][j] == board[i - 1][j] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i - 1][j] = 0;
+                score += board[i][j]; // Увеличиваем очки на значение слияния
             }
         }
     }
@@ -331,6 +336,9 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     drawBoard();
     glutSwapBuffers();
+    if (checkWin() || checkLose()) {
+        std::cout << "Your score: " << score << std::endl;
+    }
 }
 
 int main(int argc, char** argv) {
