@@ -24,19 +24,25 @@ void drawTile(int x, int y, int value) {
     glPushMatrix();
     glTranslatef(x, y, 0);
 
-    switch (value) {
-    case 2: glColor3f(0.9f, 0.9f, 0.9f); break;
-    case 4: glColor3f(1.0f, 1.0f, 0.5f); break;
-    case 8: glColor3f(1.0f, 0.5f, 0.0f); break;
-    case 16: glColor3f(1.0f, 0.0f, 0.0f); break;
-    case 32: glColor3f(0.8f, 0.6f, 1.0f); break;
-    case 64: glColor3f(0.0f, 0.0f, 1.0f); break;
-    case 128: glColor3f(0.0f, 1.0f, 1.0f); break;
-    case 256: glColor3f(0.6f, 1.0f, 0.6f); break;
-    case 512: glColor3f(0.0f, 1.0f, 0.0f); break;
-    case 1024: glColor3f(0.0f, 0.5f, 0.0f); break;
-    case 2048: glColor3f(1.0f, 0.0f, 1.0f); break;
-    default: glColor3f(1.0f, 1.0f, 1.0f);
+    if (x == 0 || y == 0 || x == (SIZE - 1) * TILE_SIZE || y == (SIZE - 1) * TILE_SIZE) {
+        // Для внешних клеток используем темно-синий цвет
+        glColor3f(0.1f, 0.1f, 0.5f);
+    }
+    else {
+        switch (value) {
+        case 2: glColor3f(0.9f, 0.9f, 0.9f); break;
+        case 4: glColor3f(1.0f, 1.0f, 0.5f); break;
+        case 8: glColor3f(1.0f, 0.5f, 0.0f); break;
+        case 16: glColor3f(1.0f, 0.0f, 0.0f); break;
+        case 32: glColor3f(0.8f, 0.6f, 1.0f); break;
+        case 64: glColor3f(0.0f, 0.0f, 1.0f); break;
+        case 128: glColor3f(0.0f, 1.0f, 1.0f); break;
+        case 256: glColor3f(0.6f, 1.0f, 0.6f); break;
+        case 512: glColor3f(0.0f, 1.0f, 0.0f); break;
+        case 1024: glColor3f(0.0f, 0.5f, 0.0f); break;
+        case 2048: glColor3f(1.0f, 0.0f, 1.0f); break;
+        default: glColor3f(1.0f, 1.0f, 1.0f);
+        }
     }
 
     glBegin(GL_QUADS);
