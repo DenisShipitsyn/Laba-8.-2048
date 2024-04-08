@@ -77,10 +77,14 @@ void generateTile() {
     if (emptyCells.empty()) {
         return;
     }
+
+    // Генерация случайного числа для определения значения новой плитки
+    int value = (rand() % 10 == 0) ? 4 : 2;
+
     int position = rand() % emptyCells.size();
     int x = emptyCells[position].first;
     int y = emptyCells[position].second;
-    board[x][y] = 2;
+    board[x][y] = value;
 }
 
 bool checkWin() {
