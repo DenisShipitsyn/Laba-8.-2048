@@ -324,8 +324,18 @@ void handleMouseClick(int button, int state, int x, int y) {
         int row = SIZE - 1 - (y / TILE_SIZE);
         int col = x / TILE_SIZE;
 
+        if ((row == 0 && col == 0) || // левый верхний угол
+            (row == 0 && col == SIZE - 1) || // правый верхний угол
+            (row == SIZE - 1 && col == 0) || // левый нижний угол
+            (row == SIZE - 1 && col == SIZE - 1)) // правый нижний угол
+        {
+            // Если нажата угловая клетка внешнего слоя, ничего не делаем
+            glutPostRedisplay();
+            return;
+        }
+
         if (row == 0 || row == SIZE - 1 || col == 0 || col == SIZE - 1) {
-            // Нажатие на внешние клетки игрового поля
+            // Нажатие на остальные клетки внешнего слоя
             if (row == 0) {
                 // Нажатие на верхние клетки внешнего слоя, двигаем клетки вверх
                 moveDown();
@@ -382,6 +392,7 @@ void handleMouseClick(int button, int state, int x, int y) {
         }
     }
 }
+
 
 int main(int argc, char** argv) {
     srand(time(nullptr));
