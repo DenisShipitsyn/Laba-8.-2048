@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <sstream>
 #include "glut.h"
-const int SIZE = 4;
+const int SIZE = 6;
 const int TILE_SIZE = 100;
 int board[SIZE][SIZE] = { 0 };
 int score = 0; // Переменная для хранения очков
@@ -67,8 +67,8 @@ void drawTile(int x, int y, int value) {
 
 void generateTile() {
     std::vector<std::pair<int, int>> emptyCells;
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
+    for (int i = 1; i < SIZE - 1; ++i) { // Изменения начинаются с 1 и заканчиваются на SIZE - 1
+        for (int j = 1; j < SIZE - 1; ++j) {
             if (board[i][j] == 0) {
                 emptyCells.push_back(std::make_pair(i, j));
             }
@@ -122,10 +122,10 @@ bool checkLose() {
 }
 
 void moveLeft() {
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE - 1; ++j) {
+    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int j = 1; j < SIZE - 1; ++j) {
             if (board[i][j] == 0) {
-                for (int k = j + 1; k < SIZE; ++k) {
+                for (int k = j + 1; k < SIZE - 1; ++k) { // Начинаем с j + 1 и заканчиваем на SIZE - 1
                     if (board[i][k] != 0) {
                         board[i][j] = board[i][k];
                         board[i][k] = 0;
@@ -138,8 +138,8 @@ void moveLeft() {
 }
 
 void mergeLeft() {
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE - 1; ++j) {
+    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int j = 1; j < SIZE - 1; ++j) {
             if (board[i][j] == board[i][j + 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i][j + 1] = 0;
@@ -150,10 +150,10 @@ void mergeLeft() {
 }
 
 void moveRight() {
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = SIZE - 1; j > 0; --j) {
+    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int j = SIZE - 2; j > 0; --j) {
             if (board[i][j] == 0) {
-                for (int k = j - 1; k >= 0; --k) {
+                for (int k = j - 1; k > 0; --k) { // Начинаем с j - 1 и заканчиваем на 0
                     if (board[i][k] != 0) {
                         board[i][j] = board[i][k];
                         board[i][k] = 0;
@@ -166,8 +166,8 @@ void moveRight() {
 }
 
 void mergeRight() {
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = SIZE - 1; j > 0; --j) {
+    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int j = SIZE - 2; j > 0; --j) {
             if (board[i][j] == board[i][j - 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i][j - 1] = 0;
@@ -178,10 +178,10 @@ void mergeRight() {
 }
 
 void moveUp() {
-    for (int j = 0; j < SIZE; ++j) {
-        for (int i = 0; i < SIZE - 1; ++i) {
+    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int i = 1; i < SIZE - 1; ++i) {
             if (board[i][j] == 0) {
-                for (int k = i + 1; k < SIZE; ++k) {
+                for (int k = i + 1; k < SIZE - 1; ++k) { // Начинаем с i + 1 и заканчиваем на SIZE - 1
                     if (board[k][j] != 0) {
                         board[i][j] = board[k][j];
                         board[k][j] = 0;
@@ -194,8 +194,8 @@ void moveUp() {
 }
 
 void mergeUp() {
-    for (int j = 0; j < SIZE; ++j) {
-        for (int i = 0; i < SIZE - 1; ++i) {
+    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int i = 1; i < SIZE - 1; ++i) {
             if (board[i][j] == board[i + 1][j] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i + 1][j] = 0;
@@ -205,29 +205,29 @@ void mergeUp() {
     }
 }
 
-void mergeDown() {
-    for (int j = 0; j < SIZE; ++j) {
-        for (int i = SIZE - 1; i > 0; --i) {
-            if (board[i][j] == board[i - 1][j] && board[i][j] != 0) {
-                board[i][j] *= 2;
-                board[i - 1][j] = 0;
-                score += board[i][j];
-            }
-        }
-    }
-}
-
 void moveDown() {
-    for (int j = 0; j < SIZE; ++j) {
-        for (int i = SIZE - 1; i > 0; --i) {
+    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int i = SIZE - 2; i > 0; --i) {
             if (board[i][j] == 0) {
-                for (int k = i - 1; k >= 0; --k) {
+                for (int k = i - 1; k > 0; --k) { // Начинаем с i - 1 и заканчиваем на 0
                     if (board[k][j] != 0) {
                         board[i][j] = board[k][j];
                         board[k][j] = 0;
                         break;
                     }
                 }
+            }
+        }
+    }
+}
+
+void mergeDown() {
+    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+        for (int i = SIZE - 2; i > 0; --i) {
+            if (board[i][j] == board[i - 1][j] && board[i][j] != 0) {
+                board[i][j] *= 2;
+                board[i - 1][j] = 0;
+                score += board[i][j];
             }
         }
     }
