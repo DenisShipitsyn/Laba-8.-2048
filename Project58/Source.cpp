@@ -239,6 +239,10 @@ void handleKeypress(unsigned char key, int x, int y) {
     }
 }
 
+void updateOriginalBoard() {
+    std::memcpy(originalBoard, board, SIZE * SIZE * sizeof(int));
+}
+
 void handleSpecialKeypress(int key, int x, int y) {
     int originalBoard[SIZE][SIZE];
     std::memcpy(originalBoard, board, SIZE * SIZE * sizeof(int));
@@ -315,6 +319,8 @@ void display() {
 
 void handleMouseClick(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        updateOriginalBoard(); // Сохраняем оригинальную доску перед перемещением клеток
+
         int row = SIZE - 1 - (y / TILE_SIZE);
         int col = x / TILE_SIZE;
 
@@ -368,6 +374,10 @@ void handleMouseClick(int button, int state, int x, int y) {
                     std::cout << "Game over! Your score: " << score << std::endl;
                     exit(0);
                 }
+            }
+            else {
+                // Если клетки не изменили своего положения, новые клетки не появятся
+                glutPostRedisplay();
             }
         }
     }
