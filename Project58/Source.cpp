@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <sstream>
 #include "glut.h"
-
 const int SIZE = 4;
 const int TILE_SIZE = 100;
 int board[SIZE][SIZE] = { 0 };
@@ -16,57 +15,29 @@ void init() {
     glLoadIdentity();
     gluOrtho2D(0, SIZE * TILE_SIZE, 0, SIZE * TILE_SIZE);
 
-    // Установка толщины линий
     glLineWidth(2.0);
-
-    // Установка режима отображения полигонов
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // Заполняем полигон цветом
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void drawTile(int x, int y, int value) {
     glPushMatrix();
     glTranslatef(x, y, 0);
 
-    // Устанавливаем цвет плитки в зависимости от ее значения
     switch (value) {
-    case 2:
-        glColor3f(0.9f, 0.9f, 0.9f); // Белый для значения 2
-        break;
-    case 4:
-        glColor3f(1.0f, 1.0f, 0.5f); // Бледно-желтый для значения 4
-        break;
-    case 8:
-        glColor3f(1.0f, 0.5f, 0.0f); // Оранжевый для значения 8
-        break;
-    case 16:
-        glColor3f(1.0f, 0.0f, 0.0f); // Красный для значения 16
-        break;
-    case 32:
-        glColor3f(0.8f, 0.6f, 1.0f); // Светло-фиолетовый для значения 32
-        break;
-    case 64:
-        glColor3f(0.0f, 0.0f, 1.0f); // Синий для значения 64
-        break;
-    case 128:
-        glColor3f(0.0f, 1.0f, 1.0f); // Голубой для значения 128
-        break;
-    case 256:
-        glColor3f(0.6f, 1.0f, 0.6f); // Светло-зеленый для значения 256
-        break;
-    case 512:
-        glColor3f(0.0f, 1.0f, 0.0f); // Просто зеленый для значения 512
-        break;
-    case 1024:
-        glColor3f(0.0f, 0.5f, 0.0f); // Темно-зеленый для значения 1024
-        break;
-    case 2048:
-        glColor3f(1.0f, 0.0f, 1.0f); // Ярко-фиолетовый для значения 2048
-        break;
-    default:
-        glColor3f(1.0f, 1.0f, 1.0f); // По умолчанию - белый
+    case 2: glColor3f(0.9f, 0.9f, 0.9f); break;
+    case 4: glColor3f(1.0f, 1.0f, 0.5f); break;
+    case 8: glColor3f(1.0f, 0.5f, 0.0f); break;
+    case 16: glColor3f(1.0f, 0.0f, 0.0f); break;
+    case 32: glColor3f(0.8f, 0.6f, 1.0f); break;
+    case 64: glColor3f(0.0f, 0.0f, 1.0f); break;
+    case 128: glColor3f(0.0f, 1.0f, 1.0f); break;
+    case 256: glColor3f(0.6f, 1.0f, 0.6f); break;
+    case 512: glColor3f(0.0f, 1.0f, 0.0f); break;
+    case 1024: glColor3f(0.0f, 0.5f, 0.0f); break;
+    case 2048: glColor3f(1.0f, 0.0f, 1.0f); break;
+    default: glColor3f(1.0f, 1.0f, 1.0f);
     }
 
-    // Рисуем квадрат плитки
     glBegin(GL_QUADS);
     glVertex2i(0, 0);
     glVertex2i(TILE_SIZE, 0);
@@ -74,7 +45,6 @@ void drawTile(int x, int y, int value) {
     glVertex2i(0, TILE_SIZE);
     glEnd();
 
-    // Отрисовываем значение на плитке
     if (value != 0) {
         glColor3f(0.0f, 0.0f, 0.0f);
         std::string text = std::to_string(value);
@@ -83,8 +53,8 @@ void drawTile(int x, int y, int value) {
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
         }
     }
-    // Рисуем контур плитки
-    glColor3f(0.0f, 0.0f, 0.0f); // Черный цвет
+
+    glColor3f(0.0f, 0.0f, 0.0f);
     glBegin(GL_LINE_LOOP);
     glVertex2i(0, 0);
     glVertex2i(TILE_SIZE, 0);
@@ -94,7 +64,7 @@ void drawTile(int x, int y, int value) {
 
     glPopMatrix();
 }
-// Генерация новой двойки на случайной пустой клетке
+
 void generateTile() {
     std::vector<std::pair<int, int>> emptyCells;
     for (int i = 0; i < SIZE; ++i) {
@@ -105,15 +75,14 @@ void generateTile() {
         }
     }
     if (emptyCells.empty()) {
-        return; // Нет пустых клеток
+        return;
     }
-    int position = rand() % emptyCells.size(); // Случайная позиция для новой двойки
+    int position = rand() % emptyCells.size();
     int x = emptyCells[position].first;
     int y = emptyCells[position].second;
-    board[x][y] = 2; // Генерируем новую двойку
+    board[x][y] = 2;
 }
 
-// Проверка на победу (наличие двойки с числом 2048 на доске)
 bool checkWin() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
@@ -125,35 +94,29 @@ bool checkWin() {
     return false;
 }
 
-// Проверка на поражение (отсутствие пустых клеток и возможности сдвинуть фишки)
 bool checkLose() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
             if (board[i][j] == 0) {
-                return false; // Есть пустая клетка
+                return false;
             }
-            // Проверяем возможность сдвинуть фишку влево
             if (j > 0 && (board[i][j] == board[i][j - 1] || board[i][j - 1] == 0)) {
                 return false;
             }
-            // Проверяем возможность сдвинуть фишку вправо
             if (j < SIZE - 1 && (board[i][j] == board[i][j + 1] || board[i][j + 1] == 0)) {
                 return false;
             }
-            // Проверяем возможность сдвинуть фишку вверх
             if (i > 0 && (board[i][j] == board[i - 1][j] || board[i - 1][j] == 0)) {
                 return false;
             }
-            // Проверяем возможность сдвинуть фишку вниз
             if (i < SIZE - 1 && (board[i][j] == board[i + 1][j] || board[i + 1][j] == 0)) {
                 return false;
             }
         }
     }
-    return true; // Нет пустых клеток и возможности сдвинуть фишки
+    return true;
 }
 
-// Сдвиг фишек влево
 void moveLeft() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE - 1; ++j) {
@@ -170,20 +133,18 @@ void moveLeft() {
     }
 }
 
-// Сложение фишек влево
 void mergeLeft() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE - 1; ++j) {
             if (board[i][j] == board[i][j + 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i][j + 1] = 0;
-                score += board[i][j]; // Увеличиваем очки на значение слияния
+                score += board[i][j];
             }
         }
     }
 }
 
-// Сдвиг фишек вправо
 void moveRight() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = SIZE - 1; j > 0; --j) {
@@ -200,20 +161,18 @@ void moveRight() {
     }
 }
 
-// Сложение фишек вправо
 void mergeRight() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = SIZE - 1; j > 0; --j) {
             if (board[i][j] == board[i][j - 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i][j - 1] = 0;
-                score += board[i][j]; // Увеличиваем очки на значение слияния
+                score += board[i][j];
             }
         }
     }
 }
 
-// Сдвиг фишек вверх
 void moveUp() {
     for (int j = 0; j < SIZE; ++j) {
         for (int i = 0; i < SIZE - 1; ++i) {
@@ -230,20 +189,18 @@ void moveUp() {
     }
 }
 
-// Сложение фишек вверх
 void mergeUp() {
     for (int j = 0; j < SIZE; ++j) {
         for (int i = 0; i < SIZE - 1; ++i) {
             if (board[i][j] == board[i + 1][j] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i + 1][j] = 0;
-                score += board[i][j]; // Увеличиваем очки на значение слияния
+                score += board[i][j];
             }
         }
     }
 }
 
-// Сдвиг фишек вниз
 void moveDown() {
     for (int j = 0; j < SIZE; ++j) {
         for (int i = SIZE - 1; i > 0; --i) {
@@ -260,28 +217,24 @@ void moveDown() {
     }
 }
 
-// Сложение фишек вниз
 void mergeDown() {
     for (int j = 0; j < SIZE; ++j) {
         for (int i = SIZE - 1; i > 0; --i) {
             if (board[i][j] == board[i - 1][j] && board[i][j] != 0) {
                 board[i][j] *= 2;
                 board[i - 1][j] = 0;
-                score += board[i][j]; // Увеличиваем очки на значение слияния
+                score += board[i][j];
             }
         }
     }
 }
 
-
-// Функция для обработки нажатий клавиш
 void handleKeypress(unsigned char key, int x, int y) {
-    if (key == 27) { // Escape key
+    if (key == 27) {
         exit(0);
     }
 }
 
-// Функция для обработки специальных клавиш
 void handleSpecialKeypress(int key, int x, int y) {
     switch (key) {
     case GLUT_KEY_LEFT:
@@ -308,14 +261,15 @@ void handleSpecialKeypress(int key, int x, int y) {
     generateTile();
     glutPostRedisplay();
     if (checkWin()) {
-        std::cout << "You win!" << std::endl;
+        std::cout << "You win! Your score: " << score << std::endl;
+        exit(0);
     }
     if (checkLose()) {
-        std::cout << "Game over!" << std::endl;
+        std::cout << "Game over! Your score: " << score << std::endl;
+        exit(0);
     }
 }
 
-// Функция отрисовки доски
 void drawBoard() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
@@ -327,8 +281,7 @@ void drawBoard() {
 }
 
 void timer(int value) {
-
-    glutTimerFunc(1000, timer, 0); // таймер с интервалом 1 секунда
+    glutTimerFunc(1000, timer, 0);
     glutPostRedisplay();
 }
 
@@ -336,9 +289,6 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     drawBoard();
     glutSwapBuffers();
-    if (checkWin() || checkLose()) {
-        std::cout << "Your score: " << score << std::endl;
-    }
 }
 
 int main(int argc, char** argv) {
@@ -353,8 +303,7 @@ int main(int argc, char** argv) {
     init();
     generateTile();
     generateTile();
-    glutTimerFunc(1000, timer, 0); // таймер с интервалом 1 секунда
+    glutTimerFunc(1000, timer, 0);
     glutMainLoop();
     return 0;
 }
-
