@@ -7,6 +7,7 @@
 const int SIZE = 6;
 const int TILE_SIZE = 100;
 int board[SIZE][SIZE] = { 0 };
+int originalBoard[SIZE][SIZE] = { 0 }; // Переменная для хранения копии доски
 int score = 0; // Переменная для хранения очков
 
 void init() {
@@ -67,7 +68,7 @@ void drawTile(int x, int y, int value) {
 
 void generateTile() {
     std::vector<std::pair<int, int>> emptyCells;
-    for (int i = 1; i < SIZE - 1; ++i) { // Изменения начинаются с 1 и заканчиваются на SIZE - 1
+    for (int i = 1; i < SIZE - 1; ++i) {
         for (int j = 1; j < SIZE - 1; ++j) {
             if (board[i][j] == 0) {
                 emptyCells.push_back(std::make_pair(i, j));
@@ -78,7 +79,6 @@ void generateTile() {
         return;
     }
 
-    // Генерация случайного числа для определения значения новой плитки
     int value = (rand() % 10 == 0) ? 4 : 2;
 
     int position = rand() % emptyCells.size();
@@ -122,10 +122,10 @@ bool checkLose() {
 }
 
 void moveLeft() {
-    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int i = 1; i < SIZE - 1; ++i) {
         for (int j = 1; j < SIZE - 1; ++j) {
             if (board[i][j] == 0) {
-                for (int k = j + 1; k < SIZE - 1; ++k) { // Начинаем с j + 1 и заканчиваем на SIZE - 1
+                for (int k = j + 1; k < SIZE - 1; ++k) {
                     if (board[i][k] != 0) {
                         board[i][j] = board[i][k];
                         board[i][k] = 0;
@@ -138,7 +138,7 @@ void moveLeft() {
 }
 
 void mergeLeft() {
-    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int i = 1; i < SIZE - 1; ++i) {
         for (int j = 1; j < SIZE - 1; ++j) {
             if (board[i][j] == board[i][j + 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
@@ -150,10 +150,10 @@ void mergeLeft() {
 }
 
 void moveRight() {
-    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int i = 1; i < SIZE - 1; ++i) {
         for (int j = SIZE - 2; j > 0; --j) {
             if (board[i][j] == 0) {
-                for (int k = j - 1; k > 0; --k) { // Начинаем с j - 1 и заканчиваем на 0
+                for (int k = j - 1; k > 0; --k) {
                     if (board[i][k] != 0) {
                         board[i][j] = board[i][k];
                         board[i][k] = 0;
@@ -166,7 +166,7 @@ void moveRight() {
 }
 
 void mergeRight() {
-    for (int i = 1; i < SIZE - 1; ++i) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int i = 1; i < SIZE - 1; ++i) {
         for (int j = SIZE - 2; j > 0; --j) {
             if (board[i][j] == board[i][j - 1] && board[i][j] != 0) {
                 board[i][j] *= 2;
@@ -178,10 +178,10 @@ void mergeRight() {
 }
 
 void moveUp() {
-    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int j = 1; j < SIZE - 1; ++j) {
         for (int i = 1; i < SIZE - 1; ++i) {
             if (board[i][j] == 0) {
-                for (int k = i + 1; k < SIZE - 1; ++k) { // Начинаем с i + 1 и заканчиваем на SIZE - 1
+                for (int k = i + 1; k < SIZE - 1; ++k) {
                     if (board[k][j] != 0) {
                         board[i][j] = board[k][j];
                         board[k][j] = 0;
@@ -194,7 +194,7 @@ void moveUp() {
 }
 
 void mergeUp() {
-    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int j = 1; j < SIZE - 1; ++j) {
         for (int i = 1; i < SIZE - 1; ++i) {
             if (board[i][j] == board[i + 1][j] && board[i][j] != 0) {
                 board[i][j] *= 2;
@@ -206,10 +206,10 @@ void mergeUp() {
 }
 
 void moveDown() {
-    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int j = 1; j < SIZE - 1; ++j) {
         for (int i = SIZE - 2; i > 0; --i) {
             if (board[i][j] == 0) {
-                for (int k = i - 1; k > 0; --k) { // Начинаем с i - 1 и заканчиваем на 0
+                for (int k = i - 1; k > 0; --k) {
                     if (board[k][j] != 0) {
                         board[i][j] = board[k][j];
                         board[k][j] = 0;
@@ -222,7 +222,7 @@ void moveDown() {
 }
 
 void mergeDown() {
-    for (int j = 1; j < SIZE - 1; ++j) { // Начинаем с 1 и заканчиваем на SIZE - 1
+    for (int j = 1; j < SIZE - 1; ++j) {
         for (int i = SIZE - 2; i > 0; --i) {
             if (board[i][j] == board[i - 1][j] && board[i][j] != 0) {
                 board[i][j] *= 2;
@@ -241,7 +241,7 @@ void handleKeypress(unsigned char key, int x, int y) {
 
 void handleSpecialKeypress(int key, int x, int y) {
     int originalBoard[SIZE][SIZE];
-    std::memcpy(originalBoard, board, SIZE * SIZE * sizeof(int)); // Создание копии текущего состояния доски
+    std::memcpy(originalBoard, board, SIZE * SIZE * sizeof(int));
 
     switch (key) {
     case GLUT_KEY_LEFT:
@@ -266,7 +266,6 @@ void handleSpecialKeypress(int key, int x, int y) {
         break;
     }
 
-    // Проверка наличия изменений после хода
     bool moved = false;
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
@@ -279,7 +278,6 @@ void handleSpecialKeypress(int key, int x, int y) {
             break;
     }
 
-    // Если были изменения, генерируем новую ячейку
     if (moved) {
         generateTile();
         glutPostRedisplay();
@@ -293,6 +291,7 @@ void handleSpecialKeypress(int key, int x, int y) {
         }
     }
 }
+
 void drawBoard() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
@@ -314,6 +313,66 @@ void display() {
     glutSwapBuffers();
 }
 
+void handleMouseClick(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        int row = SIZE - 1 - (y / TILE_SIZE);
+        int col = x / TILE_SIZE;
+
+        if (row == 0 || row == SIZE - 1 || col == 0 || col == SIZE - 1) {
+            // Нажатие на внешние клетки игрового поля
+            if (row == 0) {
+                // Нажатие на верхние клетки внешнего слоя, двигаем клетки вверх
+                moveDown();
+                mergeDown();
+                moveDown();
+            }
+            else if (row == SIZE - 1) {
+                // Нажатие на нижние клетки внешнего слоя, двигаем клетки вниз
+                moveUp();
+                mergeUp();
+                moveUp();
+            }
+            else if (col == 0) {
+                // Нажатие на левые клетки внешнего слоя, двигаем клетки влево
+                moveLeft();
+                mergeLeft();
+                moveLeft();
+            }
+            else {
+                // Нажатие на правые клетки внешнего слоя, двигаем клетки вправо
+                moveRight();
+                mergeRight();
+                moveRight();
+            }
+
+            bool moved = false;
+            for (int i = 0; i < SIZE; ++i) {
+                for (int j = 0; j < SIZE; ++j) {
+                    if (board[i][j] != originalBoard[i][j]) {
+                        moved = true;
+                        break;
+                    }
+                }
+                if (moved)
+                    break;
+            }
+
+            if (moved) {
+                generateTile();
+                glutPostRedisplay();
+                if (checkWin()) {
+                    std::cout << "You win! Your score: " << score << std::endl;
+                    exit(0);
+                }
+                if (checkLose()) {
+                    std::cout << "Game over! Your score: " << score << std::endl;
+                    exit(0);
+                }
+            }
+        }
+    }
+}
+
 int main(int argc, char** argv) {
     srand(time(nullptr));
     glutInit(&argc, argv);
@@ -323,6 +382,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutKeyboardFunc(handleKeypress);
     glutSpecialFunc(handleSpecialKeypress);
+    glutMouseFunc(handleMouseClick); // Добавленная строка для обработки щелчков мыши
     init();
     generateTile();
     generateTile();
