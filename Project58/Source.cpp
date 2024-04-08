@@ -9,31 +9,6 @@ const int TILE_SIZE = 100;
 int board[SIZE][SIZE] = { 0 };
 
 
-
-// Функция для отрисовки одной плитки (фишки) на доске
-void drawTile(int x, int y, int value) {
-    glPushMatrix();
-    glTranslatef(x, y, 0);
-    glColor3f(1, 1, 1);
-    glBegin(GL_QUADS);
-    glVertex2i(0, 0);
-    glVertex2i(TILE_SIZE, 0);
-    glVertex2i(TILE_SIZE, TILE_SIZE);
-    glVertex2i(0, TILE_SIZE);
-    glEnd();
-
-    if (value != 0) {
-        glColor3f(0.0, 0.0, 0.0);
-        std::string text = std::to_string(value);
-        glRasterPos2i(TILE_SIZE / 2 - 8 * text.length(), TILE_SIZE / 2 + 8);
-        for (char c : text) {
-            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
-        }
-    }
-    glPopMatrix();
-}
-
-// Функция инициализации OpenGL
 void init() {
     glClearColor(0.9, 0.9, 0.9, 1.0);
     glMatrixMode(GL_PROJECTION);
@@ -44,10 +19,71 @@ void init() {
     glLineWidth(2.0);
 
     // Установка режима отображения полигонов
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // Заполняем полигон цветом
 }
 
+void drawTile(int x, int y, int value) {
+    glPushMatrix();
+    glTranslatef(x, y, 0);
 
+    // Устанавливаем цвет плитки в зависимости от ее значения
+    switch (value) {
+    case 2:
+        glColor3f(0.9f, 0.9f, 0.9f); // Белый для значения 2
+        break;
+    case 4:
+        glColor3f(1.0f, 1.0f, 0.5f); // Бледно-желтый для значения 4
+        break;
+    case 8:
+        glColor3f(1.0f, 0.5f, 0.0f); // Оранжевый для значения 8
+        break;
+    case 16:
+        glColor3f(1.0f, 0.0f, 0.0f); // Красный для значения 16
+        break;
+    case 32:
+        glColor3f(0.8f, 0.6f, 1.0f); // Светло-фиолетовый для значения 32
+        break;
+    case 64:
+        glColor3f(0.0f, 0.0f, 1.0f); // Синий для значения 64
+        break;
+    case 128:
+        glColor3f(0.0f, 1.0f, 1.0f); // Голубой для значения 128
+        break;
+    case 256:
+        glColor3f(0.6f, 1.0f, 0.6f); // Светло-зеленый для значения 256
+        break;
+    case 512:
+        glColor3f(0.0f, 1.0f, 0.0f); // Просто зеленый для значения 512
+        break;
+    case 1024:
+        glColor3f(0.0f, 0.5f, 0.0f); // Темно-зеленый для значения 1024
+        break;
+    case 2048:
+        glColor3f(1.0f, 0.0f, 1.0f); // Ярко-фиолетовый для значения 2048
+        break;
+    default:
+        glColor3f(1.0f, 1.0f, 1.0f); // По умолчанию - белый
+    }
+
+    // Рисуем квадрат плитки
+    glBegin(GL_QUADS);
+    glVertex2i(0, 0);
+    glVertex2i(TILE_SIZE, 0);
+    glVertex2i(TILE_SIZE, TILE_SIZE);
+    glVertex2i(0, TILE_SIZE);
+    glEnd();
+
+    // Отрисовываем значение на плитке
+    if (value != 0) {
+        glColor3f(0.0f, 0.0f, 0.0f);
+        std::string text = std::to_string(value);
+        glRasterPos2i(TILE_SIZE / 2 - 8 * text.length(), TILE_SIZE / 2 + 8);
+        for (char c : text) {
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+        }
+    }
+    glPopMatrix();
+}
 // Генерация новой двойки на случайной пустой клетке
 void generateTile() {
     std::vector<std::pair<int, int>> emptyCells;
