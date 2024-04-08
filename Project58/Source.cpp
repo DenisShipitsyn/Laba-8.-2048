@@ -205,6 +205,18 @@ void mergeUp() {
     }
 }
 
+void mergeDown() {
+    for (int j = 0; j < SIZE; ++j) {
+        for (int i = SIZE - 1; i > 0; --i) {
+            if (board[i][j] == board[i - 1][j] && board[i][j] != 0) {
+                board[i][j] *= 2;
+                board[i - 1][j] = 0;
+                score += board[i][j];
+            }
+        }
+    }
+}
+
 void moveDown() {
     for (int j = 0; j < SIZE; ++j) {
         for (int i = SIZE - 1; i > 0; --i) {
@@ -221,18 +233,6 @@ void moveDown() {
     }
 }
 
-void mergeDown() {
-    for (int j = 0; j < SIZE; ++j) {
-        for (int i = SIZE - 1; i > 0; --i) {
-            if (board[i][j] == board[i - 1][j] && board[i][j] != 0) {
-                board[i][j] *= 2;
-                board[i - 1][j] = 0;
-                score += board[i][j];
-            }
-        }
-    }
-}
-
 void handleKeypress(unsigned char key, int x, int y) {
     if (key == 27) {
         exit(0);
@@ -240,6 +240,9 @@ void handleKeypress(unsigned char key, int x, int y) {
 }
 
 void handleSpecialKeypress(int key, int x, int y) {
+    int originalBoard[SIZE][SIZE];
+    std::memcpy(originalBoard, board, SIZE * SIZE * sizeof(int)); // Создание копии текущего состояния доски
+
     switch (key) {
     case GLUT_KEY_LEFT:
         moveLeft();
@@ -262,18 +265,34 @@ void handleSpecialKeypress(int key, int x, int y) {
         moveDown();
         break;
     }
-    generateTile();
-    glutPostRedisplay();
-    if (checkWin()) {
-        std::cout << "You win! Your score: " << score << std::endl;
-        exit(0);
+
+    // Проверка наличия изменений после хода
+    bool moved = false;
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            if (originalBoard[i][j] != board[i][j]) {
+                moved = true;
+                break;
+            }
+        }
+        if (moved)
+            break;
     }
-    if (checkLose()) {
-        std::cout << "Game over! Your score: " << score << std::endl;
-        exit(0);
+
+    // Если были изменения, генерируем новую ячейку
+    if (moved) {
+        generateTile();
+        glutPostRedisplay();
+        if (checkWin()) {
+            std::cout << "You win! Your score: " << score << std::endl;
+            exit(0);
+        }
+        if (checkLose()) {
+            std::cout << "Game over! Your score: " << score << std::endl;
+            exit(0);
+        }
     }
 }
-
 void drawBoard() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
