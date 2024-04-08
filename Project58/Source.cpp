@@ -82,6 +82,15 @@ void drawTile(int x, int y, int value) {
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
         }
     }
+    // Рисуем контур плитки
+    glColor3f(0.0f, 0.0f, 0.0f); // Черный цвет
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(0, 0);
+    glVertex2i(TILE_SIZE, 0);
+    glVertex2i(TILE_SIZE, TILE_SIZE);
+    glVertex2i(0, TILE_SIZE);
+    glEnd();
+
     glPopMatrix();
 }
 // Генерация новой двойки на случайной пустой клетке
