@@ -24,8 +24,15 @@ void drawTile(int x, int y, int value) {
     glPushMatrix();
     glTranslatef(x, y, 0);
 
-    if (x == 0 || y == 0 || x == (SIZE - 1) * TILE_SIZE || y == (SIZE - 1) * TILE_SIZE) {
-        // Для внешних клеток используем темно-синий цвет
+    bool isCornerTile = (x == 0 && y == 0) || (x == 0 && y == (SIZE - 1) * TILE_SIZE) ||
+        (x == (SIZE - 1) * TILE_SIZE && y == 0) || (x == (SIZE - 1) * TILE_SIZE && y == (SIZE - 1) * TILE_SIZE);
+
+    if (isCornerTile) {
+        // Для угловых клеток используем черный цвет
+        glColor3f(0.0f, 0.0f, 0.0f);
+    }
+    else if (x == 0 || y == 0 || x == (SIZE - 1) * TILE_SIZE || y == (SIZE - 1) * TILE_SIZE) {
+        // Для внешних клеток, кроме угловых, используем темно-синий цвет
         glColor3f(0.1f, 0.1f, 0.5f);
     }
     else {
@@ -72,6 +79,7 @@ void drawTile(int x, int y, int value) {
     glPopMatrix();
 }
 
+
 void generateTile() {
     std::vector<std::pair<int, int>> emptyCells;
     for (int i = 1; i < SIZE - 1; ++i) {
@@ -105,26 +113,18 @@ bool checkWin() {
 }
 
 bool checkLose() {
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
+    for (int i = 1; i < SIZE - 1; ++i) {
+        for (int j = 1; j < SIZE - 1; ++j) {
             if (board[i][j] == 0) {
-                return false;
+                return false; // Если есть пустая клетка внутри внешнего слоя, игра не закончена
             }
-            if (j > 0 && (board[i][j] == board[i][j - 1] || board[i][j - 1] == 0)) {
-                return false;
-            }
-            if (j < SIZE - 1 && (board[i][j] == board[i][j + 1] || board[i][j + 1] == 0)) {
-                return false;
-            }
-            if (i > 0 && (board[i][j] == board[i - 1][j] || board[i - 1][j] == 0)) {
-                return false;
-            }
-            if (i < SIZE - 1 && (board[i][j] == board[i + 1][j] || board[i + 1][j] == 0)) {
-                return false;
+            if (board[i][j] == board[i][j - 1] || board[i][j] == board[i][j + 1] ||
+                board[i][j] == board[i - 1][j] || board[i][j] == board[i + 1][j]) {
+                return false; // Если соседние клетки имеют такое же значение, игра не закончена
             }
         }
     }
-    return true;
+    return true; // Если все клетки внутри внешнего слоя заполнены и нет возможности объединить клетки, игра закончена
 }
 
 void moveLeft() {
