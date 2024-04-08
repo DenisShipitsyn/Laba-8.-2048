@@ -3,12 +3,15 @@
 #include <ctime>
 #include <cstdlib>
 #include <sstream>
+#include <cstring>
 #include "glut.h"
 const int SIZE = 6;
 const int TILE_SIZE = 100;
 int board[SIZE][SIZE] = { 0 };
 int originalBoard[SIZE][SIZE] = { 0 }; // Переменная для хранения копии доски
 int score = 0; // Переменная для хранения очков
+time_t startTime;
+time_t endTime;
 
 void init() {
     glClearColor(0.9, 0.9, 0.9, 1.0);
@@ -292,11 +295,21 @@ void handleSpecialKeypress(int key, int x, int y) {
         generateTile();
         glutPostRedisplay();
         if (checkWin()) {
+            endTime = time(nullptr);
             std::cout << "You win! Your score: " << score << std::endl;
+            double timeSpent = difftime(endTime, startTime);
+            int minutes = static_cast<int>(timeSpent) / 60;
+            int seconds = static_cast<int>(timeSpent) % 60;
+            std::cout << "Time spent: " << minutes << " minutes " << seconds << " seconds" << std::endl;
             exit(0);
         }
         if (checkLose()) {
+            endTime = time(nullptr);
             std::cout << "Game over! Your score: " << score << std::endl;
+            double timeSpent = difftime(endTime, startTime);
+            int minutes = static_cast<int>(timeSpent) / 60;
+            int seconds = static_cast<int>(timeSpent) % 60;
+            std::cout << "Time spent: " << minutes << " minutes " << seconds << " seconds" << std::endl;
             exit(0);
         }
     }
@@ -383,22 +396,27 @@ void handleMouseClick(int button, int state, int x, int y) {
                 generateTile();
                 glutPostRedisplay();
                 if (checkWin()) {
+                    endTime = time(nullptr);
                     std::cout << "You win! Your score: " << score << std::endl;
+                    double timeSpent = difftime(endTime, startTime);
+                    int minutes = static_cast<int>(timeSpent) / 60;
+                    int seconds = static_cast<int>(timeSpent) % 60;
+                    std::cout << "Time spent: " << minutes << " minutes " << seconds << " seconds" << std::endl;
                     exit(0);
                 }
                 if (checkLose()) {
+                    endTime = time(nullptr);
                     std::cout << "Game over! Your score: " << score << std::endl;
+                    double timeSpent = difftime(endTime, startTime);
+                    int minutes = static_cast<int>(timeSpent) / 60;
+                    int seconds = static_cast<int>(timeSpent) % 60;
+                    std::cout << "Time spent: " << minutes << " minutes " << seconds << " seconds" << std::endl;
                     exit(0);
                 }
-            }
-            else {
-                // Если клетки не изменили своего положения, новые клетки не появятся
-                glutPostRedisplay();
             }
         }
     }
 }
-
 
 int main(int argc, char** argv) {
     srand(time(nullptr));
@@ -413,6 +431,7 @@ int main(int argc, char** argv) {
     init();
     generateTile();
     generateTile();
+    startTime = time(nullptr);
     glutTimerFunc(1000, timer, 0);
     glutMainLoop();
     return 0;
